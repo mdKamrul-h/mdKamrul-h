@@ -1,0 +1,170 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<title>Kamrul Hasan — CV</title>
+<style>
+  @page { size: A4; margin: 13mm 14mm; }
+  * { margin: 0; padding: 0; box-sizing: border-box; }
+  body {
+    font-family: "Helvetica Neue", Helvetica, Arial, sans-serif;
+    font-size: 9.6pt; line-height: 1.42; color: #1a2333;
+  }
+  a { color: #1d4ed8; text-decoration: none; }
+
+  /* ---------- header ---------- */
+  .name { font-size: 21pt; font-weight: 800; letter-spacing: 0.4px; }
+  .role { font-size: 10.5pt; font-weight: 600; color: #4338ca; margin-top: 1mm; letter-spacing: 0.3px; }
+  .contact { margin-top: 1.6mm; font-size: 8.8pt; color: #45506b; }
+  .contact span + span::before { content: "  ·  "; color: #98a2b8; }
+
+  /* ---------- sections ---------- */
+  h2 {
+    font-size: 9.5pt; text-transform: uppercase; letter-spacing: 1.4px;
+    color: #111827; border-bottom: 1.2px solid #c7cede;
+    padding-bottom: 0.8mm; margin: 4.6mm 0 2.2mm;
+  }
+  .entry { margin-bottom: 2.8mm; page-break-inside: avoid; }
+  .entry-head { display: flex; justify-content: space-between; align-items: baseline; }
+  .entry-title { font-weight: 700; font-size: 10.2pt; }
+  .entry-title .org { font-weight: 600; color: #4338ca; }
+  .entry-date { font-size: 8.6pt; color: #5b6478; white-space: nowrap; font-style: italic; }
+  .entry-sub { font-size: 8.9pt; color: #45506b; margin: 0.4mm 0 0.8mm; }
+  ul { margin: 0.6mm 0 0 4.4mm; }
+  li { margin-bottom: 0.9mm; }
+  li b { color: #111827; }
+  .tags { margin-top: 1mm; font-size: 8.2pt; color: #5b6478; font-family: Menlo, Consolas, monospace; }
+
+  .summary { margin-top: 2.6mm; }
+
+  /* ---------- skills ---------- */
+  .skilltable { width: 100%; border-collapse: collapse; }
+  .skilltable td { padding: 0.5mm 0; vertical-align: top; font-size: 9.2pt; }
+  .skilltable td:first-child { font-weight: 700; width: 34mm; color: #111827; }
+
+  .two-col { display: flex; gap: 8mm; }
+  .two-col > div { flex: 1; }
+  .pub { margin-bottom: 1.6mm; font-size: 9.1pt; }
+  .pub i { color: #45506b; }
+  .small { font-size: 8.8pt; }
+</style>
+</head>
+<body>
+
+  <div class="name">Kamrul Hasan</div>
+  <div class="role">AI Agent Engineer · Founder &amp; CTO</div>
+  <div class="contact">
+    <span>Dhaka, Bangladesh</span>
+    <span><a href="mailto:kamrul.sociofi@gmail.com">kamrul.sociofi@gmail.com</a></span>
+    <span><a href="https://github.com/mdKamrul-h">github.com/mdKamrul-h</a></span>
+    <span><a href="https://linkedin.com/in/mdkamrulh">linkedin.com/in/mdkamrulh</a></span>
+    <span><a href="https://fabricxai.com">fabricxai.com</a></span>
+  </div>
+
+  <p class="summary">
+    Engineer who builds <b>production AI agent systems</b> — currently an AI-native ERP for the garment industry and the
+    agents-as-a-service platform beneath it. Deep-learning research background (BUET EEE, M.S. Biomedical Physics) applied to
+    shipping real products: human-in-the-loop agent architectures, tiered model routing, and multi-tenant systems where the
+    model proposes and code decides. Comfortable owning everything from the Anthropic tool-use loop to the Postgres RLS policies under it.
+  </p>
+
+  <h2>Experience</h2>
+
+  <div class="entry">
+    <div class="entry-head">
+      <div class="entry-title">Founder &amp; CTO — <span class="org">SocioFi Technology</span></div>
+      <div class="entry-date">Aug 2024 – Present · Dhaka</div>
+    </div>
+    <div class="entry-sub">Building vertical AI products end-to-end: product design, architecture, implementation, and cloud operations.</div>
+    <ul>
+      <li><b>fabricXai — “The Garment Operating System”</b> (live at <a href="https://app.fabricxai.com">app.fabricxai.com</a>):
+        AI-native ERP for garment factories replacing Excel/WhatsApp workflows across RFQs, quoting, production, quality, and compliance.</li>
+      <li>Designed the <b>MARBIM copilot</b> on a strict <b>propose → approve → commit</b> loop: all AI output lands in a
+        <i>pending-changes</i> queue for human sign-off — the model never writes production data.</li>
+      <li>Built a <b>streaming tool-use agent</b> (Vercel AI SDK) whose every tool call runs through the caller's session,
+        so <b>Postgres row-level security</b> scopes agent access in a multi-tenant DB; 25 SQL migrations, 17 carrying RLS policies.</li>
+      <li>Implemented a <b>role-based model registry</b> (Claude Sonnet for reasoning, Gemini Flash for fast paths) and an
+        AI-drafts / <b>code-computes</b> quoting engine — LLM proposes cost components, deterministic code computes FOB pricing.</li>
+      <li><b>SocioFi Agents</b> (agents-as-a-service, in build): hand-rolled agent runtime on the <b>Anthropic SDK's native tool_use</b>
+        (no LangChain/LangGraph) — pure-functional loop, iteration caps, per-token cost accounting, and mid-loop human-approval gates.</li>
+      <li>Engineered <b>three-tier model routing</b> (Opus/Sonnet/Haiku), a fail-safe JSON-logic governance engine
+        (auto-approve / auto-reject / gate), and a sandbox runtime with hard cost, time, and token caps for pre-production agent testing.</li>
+      <li>Shipped platform infrastructure: encrypted secrets vault, HMAC-signed webhooks with exponential retry,
+        append-only audit logs, bcrypt-hashed API keys, pgvector skill library, TS + Python SDKs.</li>
+      <li>Operate the company's infrastructure on <b>self-managed cloud</b> (Docker, Linux, OCI) with GitHub Actions CI/CD — cost-engineered to run lean.</li>
+    </ul>
+    <div class="tags">Python · FastAPI · Anthropic SDK · Vercel AI SDK · Next.js · TypeScript · Supabase/Postgres+RLS · pgvector · Celery · Redis · Docker</div>
+  </div>
+
+  <div class="entry">
+    <div class="entry-head">
+      <div class="entry-title">Machine Learning Researcher — <span class="org">Ontik Technology Co. Ltd.</span></div>
+      <div class="entry-date">Sept 2022 – Jan 2023 · Dhaka</div>
+    </div>
+    <ul>
+      <li>Built an NLP model for a digital meeting-scheduling product with a four-person team.</li>
+      <li>Deployed to AWS as production software handling large-scale traffic.</li>
+    </ul>
+  </div>
+
+  <div class="entry">
+    <div class="entry-head">
+      <div class="entry-title">M.S. Researcher — <span class="org">Biomedical Physics Lab, University of Dhaka</span></div>
+      <div class="entry-date">Jan 2024 – Jul 2024 · Dhaka</div>
+    </div>
+    <ul>
+      <li>Developed a contrastive self-supervised transfer-learning framework for cancer classification on multi-modal MRI/CT,
+        validated against histopathology, with active-learning label efficiency and zero-shot metastasis identification.</li>
+    </ul>
+  </div>
+
+  <h2>How I Build Production AI</h2>
+  <ul>
+    <li><b>Model proposes, human approves, code commits</b> — LLMs never write live records; approval queues are the spine of every product.</li>
+    <li><b>Right-size the model</b> — tiered routing sends volume work to small models (Haiku/Flash) and reserves frontier reasoning for where it pays.</li>
+    <li><b>Deterministic core, generative shell</b> — pricing math, AQL verdicts, and state machines live in code; the model narrates and drafts.</li>
+    <li><b>Budgets on everything</b> — agent loops are step-capped, token-capped, time-capped, and cost-capped; tenant isolation is enforced in Postgres, not in the prompt.</li>
+  </ul>
+
+  <h2>Skills</h2>
+  <table class="skilltable">
+    <tr><td>AI / Agents</td><td>Anthropic SDK &amp; native tool use, Vercel AI SDK, multi-agent orchestration, structured output (Zod/Pydantic), RAG &amp; pgvector, model tiering &amp; cost control, human-in-the-loop governance, MCP (exploring)</td></tr>
+    <tr><td>ML / DL</td><td>PyTorch, TensorFlow/Keras, scikit-learn; CNNs, Transformers, contrastive self-supervised learning, active learning; computer vision &amp; medical imaging</td></tr>
+    <tr><td>Backend</td><td>Python 3.11, FastAPI, SQLAlchemy, Celery + Redis, PostgreSQL (RLS, pgvector, TimescaleDB), Supabase, Node.js</td></tr>
+    <tr><td>Frontend</td><td>TypeScript, Next.js (App Router), React, Tailwind, Flutter</td></tr>
+    <tr><td>Infra / Ops</td><td>Docker, Linux, Oracle Cloud / AWS, GitHub Actions CI/CD, MinIO, Stripe, Cloudflare</td></tr>
+  </table>
+
+  <h2>Education</h2>
+  <div class="two-col">
+    <div>
+      <div class="entry">
+        <div class="entry-head">
+          <div class="entry-title small">M.S., Biomedical Physics</div>
+          <div class="entry-date">2023 – 2024</div>
+        </div>
+        <div class="entry-sub">University of Dhaka — thesis: contrastive self-supervised cancer classification on MRI/CT</div>
+      </div>
+    </div>
+    <div>
+      <div class="entry">
+        <div class="entry-head">
+          <div class="entry-title small">B.Sc., Electrical &amp; Electronic Engineering</div>
+          <div class="entry-date">2016 – 2022</div>
+        </div>
+        <div class="entry-sub">BUET — Communication Systems; thesis: exponential loss function for deep-learning classification</div>
+      </div>
+    </div>
+  </div>
+
+  <h2>Publications (in preparation)</h2>
+  <div class="pub"><i>Enhancing Cancer Classification through Contrastive Self-Supervised and Active Learning on Multi-Modal CT and MRI Scans</i> — journal paper.</div>
+  <div class="pub"><i>Exponential Loss Function for Efficient Deep Neural Network Classification</i> — conference paper.</div>
+
+  <h2>Certifications</h2>
+  <p class="small"><b>9 specializations</b> — Deep Learning · NLP · TensorFlow Developer · AI for Medicine · Applied Data Science with Python ·
+  ML &amp; Advanced ML on Google Cloud · TensorFlow Data &amp; Deployment · Google IT Automation with Python (Coursera / Google / DeepLearning.AI) —
+  plus <b>100+ course certificates</b>, including <b>training GPT-2 from scratch (2020)</b> and on-device models with TensorFlow Lite.</p>
+
+</body>
+</html>

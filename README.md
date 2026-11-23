@@ -11,7 +11,7 @@
 
 ## About
 
-I build **AI agent systems for real industries** — currently an AI-powered ERP for garment manufacturing, and an agents-as-a-service platform underneath it.
+I build **AI agent systems for real industries** — an AI-powered ERP for garment manufacturing, an agents-as-a-service platform underneath it, and a growing line of products where AI drafts and a person decides: verified answers in Bangla, building-permit plan review, hospital records, hiring.
 
 My rule for production AI: **the model proposes, the system disposes.** Agents in my products never write to a live database — they draft into an approval queue, their tool calls are scoped by Postgres row-level security, their loops are step-capped and cost-capped, and anything deterministic (pricing math, pass/fail logic) is computed in code, not by the model. That's the difference between a demo and something a factory can run its orders on.
 
@@ -48,6 +48,60 @@ The engine room: enterprises compose multi-agent architectures on a visual canva
 Provider-agnostic hosting (AWS / DigitalOcean / Hetzner / Vercel) for people who don't administer their own infra. A typed `Protocol` abstraction over every provider — deploys with blue-green rollback, log streaming, ACME SSL, TimescaleDB metrics, RBAC, and append-only audit. Deliberately *not* AI-native: one small model (Haiku) summarizes incidents, nothing more.
 
 `FastAPI` `SQLAlchemy` `TimescaleDB` `Stripe` `Cloudflare` `boto3 / hcloud`
+
+## More builds
+
+The same rule, applied in other domains: verified answers, permit review, healthcare, hiring, content, community.
+
+### ✅ Torun (তরুণ) — Bangla-first verified answers for Bangladesh &nbsp; <sub>in build · pre-pilot</sub>
+
+Free, sourced answers to public-service questions, with a trust label on every one. One Flutter codebase for Android, iOS and web, on a FastAPI backend.
+
+- **Hybrid retrieval** over crawled official sources: pgvector (HNSW) + full-text search fused by rank, boosted by source tier and recency. Below a similarity floor the answer is `NO_SOURCE` — the model is never asked to guess.
+- **Citations enforced in code**: every sentence must cite passage IDs; uncited sentences, and numbers or dates absent from the cited passages, are dropped before the user sees them.
+- **Trust labels are rules, not prompts** — `VERIFIED` / `DISAGREE` / `HEALTH` / `OUTDATED` / `NO_SOURCE` are assigned by deterministic code. Emergency red flags are caught before any model runs; retrieved text passes a prompt-injection filter.
+- **Bangla ingestion done properly**: legacy Bijoy-font conversion to Unicode, Tesseract OCR for scans, and human approval for OCR passages that carry dates or amounts.
+- **Budgets and audits**: per-provider daily spend caps that downgrade the model, a cache that holds only verified answers, gold-set retrieval evals, and a monthly stratified audit sample.
+
+`Flutter` `FastAPI` `Postgres + pgvector` `Celery + Redis` `OpenTelemetry` `Prometheus / Grafana`
+
+### 📐 Inzhora — AI-assisted plan check for California residential permits &nbsp; <sub>in build</sub>
+
+Reads a permit submittal, checks it against the 2022 California Building Standards Code (Title 24), and drafts plan-check comments that a licensed reviewer accepts, edits or rejects in a Bluebeam-style markup interface.
+
+- **Deterministic rules run before any LLM check** — if a check can be done without a model, it is.
+- **No fabricated citations**: every finding carries a source, a confidence score and a sheet location; a citation must resolve in the code knowledge base or the finding is marked as judgment.
+- **The reviewer decides**: only accepted comments reach the correction letter, acceptance is blocked while a finding has an unverified item, and findings are immutable once decided.
+- **Structured output only**: tool-use with a JSON schema for every model call, every call logged (model, prompt hash, tokens, latency), and an eval harness that scores AI findings against comment letters real plan checkers issued.
+- **Contract-first workflow app**: an OpenAPI contract checked on every request and response, with the full Playwright suite passing against the real backend.
+
+`Python 3.12` `Anthropic SDK` `FastAPI` `Postgres + pgvector` `PyMuPDF` `React + pdf.js` `Fastify` `Playwright`
+
+### 📡 [Antarious Signal](https://signal.antarious.com) — cited research to content, for brands &nbsp; <sub>pilot live</sub>
+
+Brand setup → cited research → editable strategy → content calendar and drafts → monitoring, in Bangla and English.
+
+- **Research with receipts**: web-search-backed research returned as Zod-validated structured output with sources.
+- **Drafts that can't invent facts**: inputs are treated as untrusted, and prices, statistics and testimonials may not be made up. Strategy is assembled from saved reports with no extra model call.
+- **The owner approves; nothing auto-posts.** Approved versions are immutable. Research is rate-limited per workspace and service-wide.
+
+`Next.js 16` `TypeScript` `Supabase / Postgres RLS` `Zod` `Vitest` `Docker`
+
+### 🐾 [Parul](https://parul.pet) — pet adoption, rescue and community &nbsp; <sub>Google Play open testing · TestFlight</sub>
+
+A full consumer product, and deliberately not an AI one: feed, circles, adoption, rescue, lost-and-found, foster / transport / blood-donor services, vet consults and direct messages.
+
+- **Realtime backend**: Django REST + Channels over Redis for websockets, Celery for scheduled work, Postgres, Cloudflare R2 media, FCM push.
+- **Shipped through the stores**: Flutter app with Google and Apple sign-in, CI release builds, and 2,400+ automated tests across app and backend.
+
+`Flutter` `Django REST + Channels` `Postgres` `Celery + Redis` `Cloudflare R2` `Firebase`
+
+### Also live
+
+| Product | What it is | Where the AI stops |
+| --- | --- | --- |
+| 🌍 [Global Job](https://jobglobal.sociofitechnology.com) | Job portal for Bangladesh and abroad: describe the job you want, see in plain words why each one fits. | AI reads what the job seeker writes; fixed rules do the matching. The AI never ranks people. |
+| 🏥 [Chartis HIS](https://chartis.sociofitechnology.com) | Bangla-first cloud hospital and clinic system: front desk, consultation, billing, lab, pharmacy, wards. <sub>early access</sub> | An AI scribe drafts the consultation note, labelled "AI draft — unverified". The doctor signs every one. The AI never diagnoses. |
 
 ## How I build
 

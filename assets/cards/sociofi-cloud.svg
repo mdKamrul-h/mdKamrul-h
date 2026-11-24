@@ -1,0 +1,26 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="800" height="250" viewBox="0 0 800 250" role="img" aria-label="SocioFi Cloud — Managed hosting console. In Build · Infrastructure. launch → monitor → roll back">
+  <defs>
+    <linearGradient id="bg" x1="0" y1="0" x2="1" y2="1"><stop offset="0" stop-color="#070a12"/><stop offset="1" stop-color="#0e0d22"/></linearGradient>
+    <linearGradient id="ac" x1="0" y1="0" x2="1" y2="1"><stop offset="0" stop-color="#38bdf8"/><stop offset="1" stop-color="#2563eb"/></linearGradient>
+    <linearGradient id="tx" x1="0" y1="0" x2="1" y2="0"><stop offset="0" stop-color="#38bdf8"/><stop offset="1" stop-color="#2563eb"/></linearGradient>
+    <radialGradient id="g1" cx="0.95" cy="1" r="0.8"><stop offset="0" stop-color="#2563eb" stop-opacity="0.38"/><stop offset="1" stop-color="#2563eb" stop-opacity="0"/></radialGradient>
+    <radialGradient id="g2" cx="0.05" cy="0" r="0.6"><stop offset="0" stop-color="#38bdf8" stop-opacity="0.16"/><stop offset="1" stop-color="#38bdf8" stop-opacity="0"/></radialGradient>
+    <pattern id="dots" width="26" height="26" patternUnits="userSpaceOnUse"><circle cx="2" cy="2" r="1.1" fill="#94a3b8" opacity="0.09"/></pattern>
+    <clipPath id="fr"><rect width="800" height="250" rx="22"/></clipPath>
+  </defs>
+  <g clip-path="url(#fr)">
+    <rect width="800" height="250" fill="url(#bg)"/>
+    <rect width="800" height="250" fill="url(#dots)"/>
+    <rect width="800" height="250" fill="url(#g1)"/>
+    <rect width="800" height="250" fill="url(#g2)"/>
+    <circle cx="47" cy="44" r="6" fill="#fbbf24"/>
+    <circle cx="47" cy="44" r="11" fill="#fbbf24" opacity="0.22"/>
+    <text x="68" y="50" font-family="ui-monospace, 'SF Mono', Menlo, Consolas, 'Liberation Mono', monospace" font-size="16" font-weight="600" letter-spacing="2.2" fill="#a3aecb">IN BUILD · INFRASTRUCTURE</text>
+    <text x="38" y="112" font-family="-apple-system, 'Segoe UI', Helvetica, Arial, sans-serif" font-size="52" font-weight="800" letter-spacing="-0.8" fill="#f8fafc">SocioFi Cloud</text>
+    <text x="40" y="150" font-family="-apple-system, 'Segoe UI', Helvetica, Arial, sans-serif" font-size="24" font-weight="600" fill="url(#tx)">Managed hosting console</text>
+    <rect x="676" y="30" width="84" height="84" rx="22" fill="url(#ac)"/>
+    <text x="718" y="87" text-anchor="middle" font-family="-apple-system, 'Segoe UI', Helvetica, Arial, sans-serif" font-size="40" font-weight="800" fill="#06101c">C</text>
+    <rect x="40" y="176" width="98" height="42" rx="21" fill="#0d1528" stroke="#38bdf8" stroke-opacity="0.5"/><text x="89" y="203" text-anchor="middle" font-family="ui-monospace, 'SF Mono', Menlo, Consolas, 'Liberation Mono', monospace" font-size="17" fill="#dbe4ff">launch</text><path d="M148 197 H171 M164 190 L172 197 L164 204" fill="none" stroke="#38bdf8" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/><rect x="182" y="176" width="109" height="42" rx="21" fill="#0d1528" stroke="#38bdf8" stroke-opacity="0.5"/><text x="237" y="203" text-anchor="middle" font-family="ui-monospace, 'SF Mono', Menlo, Consolas, 'Liberation Mono', monospace" font-size="17" fill="#dbe4ff">monitor</text><path d="M301 197 H324 M317 190 L325 197 L317 204" fill="none" stroke="#38bdf8" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/><rect x="335" y="176" width="130" height="42" rx="21" fill="#0d1528" stroke="#38bdf8" stroke-opacity="0.5"/><text x="400" y="203" text-anchor="middle" font-family="ui-monospace, 'SF Mono', Menlo, Consolas, 'Liberation Mono', monospace" font-size="17" fill="#dbe4ff">roll back</text>
+    <rect x="0" y="245" width="800" height="5" fill="url(#ac)"/>
+  </g>
+</svg>

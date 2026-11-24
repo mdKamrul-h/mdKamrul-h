@@ -1,0 +1,26 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="800" height="250" viewBox="0 0 800 250" role="img" aria-label="Global Job — Job portal for Bangladesh and abroad. Live · Hiring. describe the job → see why it fits → apply">
+  <defs>
+    <linearGradient id="bg" x1="0" y1="0" x2="1" y2="1"><stop offset="0" stop-color="#070a12"/><stop offset="1" stop-color="#0e0d22"/></linearGradient>
+    <linearGradient id="ac" x1="0" y1="0" x2="1" y2="1"><stop offset="0" stop-color="#a3e635"/><stop offset="1" stop-color="#16a34a"/></linearGradient>
+    <linearGradient id="tx" x1="0" y1="0" x2="1" y2="0"><stop offset="0" stop-color="#a3e635"/><stop offset="1" stop-color="#16a34a"/></linearGradient>
+    <radialGradient id="g1" cx="0.95" cy="1" r="0.8"><stop offset="0" stop-color="#16a34a" stop-opacity="0.38"/><stop offset="1" stop-color="#16a34a" stop-opacity="0"/></radialGradient>
+    <radialGradient id="g2" cx="0.05" cy="0" r="0.6"><stop offset="0" stop-color="#a3e635" stop-opacity="0.16"/><stop offset="1" stop-color="#a3e635" stop-opacity="0"/></radialGradient>
+    <pattern id="dots" width="26" height="26" patternUnits="userSpaceOnUse"><circle cx="2" cy="2" r="1.1" fill="#94a3b8" opacity="0.09"/></pattern>
+    <clipPath id="fr"><rect width="800" height="250" rx="22"/></clipPath>
+  </defs>
+  <g clip-path="url(#fr)">
+    <rect width="800" height="250" fill="url(#bg)"/>
+    <rect width="800" height="250" fill="url(#dots)"/>
+    <rect width="800" height="250" fill="url(#g1)"/>
+    <rect width="800" height="250" fill="url(#g2)"/>
+    <circle cx="47" cy="44" r="6" fill="#34d399"/>
+    <circle cx="47" cy="44" r="11" fill="#34d399" opacity="0.22"/>
+    <text x="68" y="50" font-family="ui-monospace, 'SF Mono', Menlo, Consolas, 'Liberation Mono', monospace" font-size="16" font-weight="600" letter-spacing="2.2" fill="#a3aecb">LIVE · HIRING</text>
+    <text x="38" y="112" font-family="-apple-system, 'Segoe UI', Helvetica, Arial, sans-serif" font-size="52" font-weight="800" letter-spacing="-0.8" fill="#f8fafc">Global Job</text>
+    <text x="40" y="150" font-family="-apple-system, 'Segoe UI', Helvetica, Arial, sans-serif" font-size="24" font-weight="600" fill="url(#tx)">Job portal for Bangladesh and abroad</text>
+    <rect x="676" y="30" width="84" height="84" rx="22" fill="url(#ac)"/>
+    <text x="718" y="87" text-anchor="middle" font-family="-apple-system, 'Segoe UI', Helvetica, Arial, sans-serif" font-size="40" font-weight="800" fill="#06101c">G</text>
+    <rect x="40" y="176" width="202" height="42" rx="21" fill="#0d1528" stroke="#a3e635" stroke-opacity="0.5"/><text x="141" y="203" text-anchor="middle" font-family="ui-monospace, 'SF Mono', Menlo, Consolas, 'Liberation Mono', monospace" font-size="17" fill="#dbe4ff">describe the job</text><path d="M252 197 H275 M268 190 L276 197 L268 204" fill="none" stroke="#a3e635" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/><rect x="286" y="176" width="192" height="42" rx="21" fill="#0d1528" stroke="#a3e635" stroke-opacity="0.5"/><text x="382" y="203" text-anchor="middle" font-family="ui-monospace, 'SF Mono', Menlo, Consolas, 'Liberation Mono', monospace" font-size="17" fill="#dbe4ff">see why it fits</text><path d="M488 197 H511 M504 190 L512 197 L504 204" fill="none" stroke="#a3e635" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/><rect x="522" y="176" width="88" height="42" rx="21" fill="#0d1528" stroke="#a3e635" stroke-opacity="0.5"/><text x="566" y="203" text-anchor="middle" font-family="ui-monospace, 'SF Mono', Menlo, Consolas, 'Liberation Mono', monospace" font-size="17" fill="#dbe4ff">apply</text>
+    <rect x="0" y="245" width="800" height="5" fill="url(#ac)"/>
+  </g>
+</svg>

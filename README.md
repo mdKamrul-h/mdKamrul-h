@@ -13,134 +13,97 @@
 
 I build **AI agent systems for real industries** — an AI-powered ERP for garment manufacturing, an agents-as-a-service platform underneath it, and a growing line of products where AI drafts and a person decides: verified answers in Bangla, building-permit plan review, hospital records, hiring.
 
-My rule for production AI: **the model proposes, the system disposes.** Agents in my products never write to a live database — they draft into an approval queue, their tool calls are scoped by Postgres row-level security, their loops are step-capped and cost-capped, and anything deterministic (pricing math, pass/fail logic) is computed in code, not by the model. That's the difference between a demo and something a factory can run its orders on.
+My rule for production AI: **the model proposes, the system disposes.** The AI in my products never changes live data on its own. It drafts into an approval queue, it can only see what the signed-in user is allowed to see, it works inside hard limits on steps and cost, and anything that must be exact (prices, pass/fail results) is calculated by fixed rules, not by the model. That's the difference between a demo and something a factory can run its orders on.
 
 The runway behind it: an EE degree (BUET), an M.S. thesis on self-supervised medical imaging, 9 deep-learning specializations — and a **GPT-2 trained from scratch in 2020**, back when language models were a niche hobby.
 
-## Flagship builds
+## What I've built
 
-### 🏭 [fabricXai](https://fabricxai.com) — The Garment Operating System &nbsp; <sub>live at `app.fabricxai.com`</sub>
+Nine products across manufacturing, public services, construction, healthcare, hiring and community. The same rule runs through all of them: **AI prepares the work, and a person makes the decision.**
 
-AI-native ERP for garment factories and buying houses — replacing the Excel-and-WhatsApp workflow for RFQs, quoting, production, quality, and compliance. Built solo, shipped in waves.
-
-- **"MARBIM" copilot** across every module, on a strict **propose → approve → commit** loop: AI output lands in a `pending_changes` queue that a human approves — nothing is sent or changed without sign-off.
-- **Streaming tool-use agent** (Vercel AI SDK): step-capped, with every tool query running through the caller's session so **row-level security scopes what the agent can see** in a multi-tenant DB.
-- **Role-based model registry** — `reasoning: claude-sonnet-4-5`, `fast: gemini-2.5-flash`. Right model for the job, swappable in one line, never hardcoded.
-- **AI drafts, code computes**: the quoting engine has the LLM propose cost components, then computes FOB pricing deterministically. The math is real; the copilot narrates it.
-- **Real ERP foundations**: 25 SQL migrations, 17 carrying RLS policies for per-company isolation; trigram indexes so search stays fast at scale; email-confirmed auth; ~135 React components across 18+ module screens.
-
-`Next.js 16` `TypeScript` `Supabase / Postgres RLS` `Vercel AI SDK` `Claude` `Gemini` `Zod`
-
-### 🤖 SocioFi Agents — agents-as-a-service platform &nbsp; <sub>in build</sub>
-
-The engine room: enterprises compose multi-agent architectures on a visual canvas, deploy them, and govern every action.
-
-- **Hand-rolled agent runtime** on the Anthropic SDK's native `tool_use` — **no LangChain, no LangGraph** (banned patterns in the repo). A pure-functional loop with an injected client, iteration caps, and per-token cost accounting.
-- **Three-tier model routing** — orchestrator / domain / lightweight (Opus / Sonnet / Haiku): cheap models do cheap work, expensive ones only when reasoning demands it.
-- **Governance as an engine, not a checkbox**: a JSON-logic rule engine resolves each action to `auto_approve` / `auto_reject` / `gate` — and **fails safe to human review** on any error. Agents can be paused mid-loop for approval.
-- **Sandbox before production**: every architecture test-runs in an ephemeral sandbox with hard cost ($5), time (120s), and token caps, against mocked integrations.
-- **Platform plumbing done properly**: encrypted secrets vault, HMAC-signed webhooks with exponential retry + auto-disable, append-only audit logs, bcrypt-hashed `sk_` API keys, pgvector-backed skill library with version pinning, TS + Python SDKs.
-
-`Python 3.11` `FastAPI` `Anthropic SDK` `Celery + Redis` `Postgres + pgvector` `Supabase Realtime` `React Flow` `Docker`
-
-### ☁️ SocioFi Cloud — managed hosting console &nbsp; <sub>in build</sub>
-
-Provider-agnostic hosting (AWS / DigitalOcean / Hetzner / Vercel) for people who don't administer their own infra. A typed `Protocol` abstraction over every provider — deploys with blue-green rollback, log streaming, ACME SSL, TimescaleDB metrics, RBAC, and append-only audit. Deliberately *not* AI-native: one small model (Haiku) summarizes incidents, nothing more.
-
-`FastAPI` `SQLAlchemy` `TimescaleDB` `Stripe` `Cloudflare` `boto3 / hcloud`
-
-## More builds
-
-The same rule, applied in other domains: verified answers, permit review, healthcare, hiring, content, community.
-
-### ✅ Torun (তরুণ) — Bangla-first verified answers for Bangladesh &nbsp; <sub>in build · pre-pilot</sub>
-
-Free, sourced answers to public-service questions, with a trust label on every one. One Flutter codebase for Android, iOS and web, on a FastAPI backend.
-
-- **Hybrid retrieval** over crawled official sources: pgvector (HNSW) + full-text search fused by rank, boosted by source tier and recency. Below a similarity floor the answer is `NO_SOURCE` — the model is never asked to guess.
-- **Citations enforced in code**: every sentence must cite passage IDs; uncited sentences, and numbers or dates absent from the cited passages, are dropped before the user sees them.
-- **Trust labels are rules, not prompts** — `VERIFIED` / `DISAGREE` / `HEALTH` / `OUTDATED` / `NO_SOURCE` are assigned by deterministic code. Emergency red flags are caught before any model runs; retrieved text passes a prompt-injection filter.
-- **Bangla ingestion done properly**: legacy Bijoy-font conversion to Unicode, Tesseract OCR for scans, and human approval for OCR passages that carry dates or amounts.
-- **Budgets and audits**: per-provider daily spend caps that downgrade the model, a cache that holds only verified answers, gold-set retrieval evals, and a monthly stratified audit sample.
-
-`Flutter` `FastAPI` `Postgres + pgvector` `Celery + Redis` `OpenTelemetry` `Prometheus / Grafana`
-
-### 📐 Inzhora — AI-assisted plan check for California residential permits &nbsp; <sub>in build</sub>
-
-Reads a permit submittal, checks it against the 2022 California Building Standards Code (Title 24), and drafts plan-check comments that a licensed reviewer accepts, edits or rejects in a Bluebeam-style markup interface.
-
-- **Deterministic rules run before any LLM check** — if a check can be done without a model, it is.
-- **No fabricated citations**: every finding carries a source, a confidence score and a sheet location; a citation must resolve in the code knowledge base or the finding is marked as judgment.
-- **The reviewer decides**: only accepted comments reach the correction letter, acceptance is blocked while a finding has an unverified item, and findings are immutable once decided.
-- **Structured output only**: tool-use with a JSON schema for every model call, every call logged (model, prompt hash, tokens, latency), and an eval harness that scores AI findings against comment letters real plan checkers issued.
-- **Contract-first workflow app**: an OpenAPI contract checked on every request and response, with the full Playwright suite passing against the real backend.
-
-`Python 3.12` `Anthropic SDK` `FastAPI` `Postgres + pgvector` `PyMuPDF` `React + pdf.js` `Fastify` `Playwright`
-
-### 📡 [Antarious Signal](https://signal.antarious.com) — cited research to content, for brands &nbsp; <sub>pilot live</sub>
-
-Brand setup → cited research → editable strategy → content calendar and drafts → monitoring, in Bangla and English.
-
-- **Research with receipts**: web-search-backed research returned as Zod-validated structured output with sources.
-- **Drafts that can't invent facts**: inputs are treated as untrusted, and prices, statistics and testimonials may not be made up. Strategy is assembled from saved reports with no extra model call.
-- **The owner approves; nothing auto-posts.** Approved versions are immutable. Research is rate-limited per workspace and service-wide.
-
-`Next.js 16` `TypeScript` `Supabase / Postgres RLS` `Zod` `Vitest` `Docker`
-
-### 🐾 [Parul](https://parul.pet) — pet adoption, rescue and community &nbsp; <sub>Google Play open testing · TestFlight</sub>
-
-A full consumer product, and deliberately not an AI one: feed, circles, adoption, rescue, lost-and-found, foster / transport / blood-donor services, vet consults and direct messages.
-
-- **Realtime backend**: Django REST + Channels over Redis for websockets, Celery for scheduled work, Postgres, Cloudflare R2 media, FCM push.
-- **Shipped through the stores**: Flutter app with Google and Apple sign-in, CI release builds, and 2,400+ automated tests across app and backend.
-
-`Flutter` `Django REST + Channels` `Postgres` `Celery + Redis` `Cloudflare R2` `Firebase`
-
-### Also live
-
-| Product | What it is | Where the AI stops |
-| --- | --- | --- |
-| 🌍 [Global Job](https://jobglobal.sociofitechnology.com) | Job portal for Bangladesh and abroad: describe the job you want, see in plain words why each one fits. | AI reads what the job seeker writes; fixed rules do the matching. The AI never ranks people. |
-| 🏥 [Chartis HIS](https://chartis.sociofitechnology.com) | Bangla-first cloud hospital and clinic system: front desk, consultation, billing, lab, pharmacy, wards. <sub>early access</sub> | An AI scribe drafts the consultation note, labelled "AI draft — unverified". The doctor signs every one. The AI never diagnoses. |
+<table>
+  <tr>
+    <td colspan="2" valign="top">
+      <a href="https://fabricxai.com"><img src="https://raw.githubusercontent.com/mdKamrul-h/mdKamrul-h/main/assets/cards/fabricxai.svg" alt="fabricXai — the garment factory operating system (live pilot)" width="100%"/></a>
+      <p>Garment factories and buying houses still run their orders through email, Excel and WhatsApp, retyping the same details at every step. fabricXai brings quoting, production, quality and compliance into one system and follows each order from the buyer's first email to the bank payment.</p>
+      <p><b>AI's role:</b> It reads incoming documents, drafts the entries and works as an assistant inside every module. Each draft waits in a queue for a named person to approve it, so nothing is sent or changed on the AI's word alone. Prices are worked out by fixed formulas, never by the AI.</p>
+      <p><a href="https://fabricxai.com">fabricxai.com</a></p>
+    </td>
+  </tr>
+  <tr>
+    <td width="50%" valign="top">
+      <img src="https://raw.githubusercontent.com/mdKamrul-h/mdKamrul-h/main/assets/cards/sociofi-agents.svg" alt="SocioFi Agents — teams of AI agents, as a service (in build)" width="100%"/>
+      <p>The platform underneath my other products. A company lays out a team of AI agents on a visual canvas, tries it in a safe test area with spending limits, and then puts it to work.</p>
+      <p><b>AI's role:</b> Agents do the work inside fixed limits on steps, cost and time. A rule book sorts every action into allow, block or ask a person, and whenever something goes wrong the default is to ask a person. Every action is recorded.</p>
+    </td>
+    <td width="50%" valign="top">
+      <img src="https://raw.githubusercontent.com/mdKamrul-h/mdKamrul-h/main/assets/cards/sociofi-cloud.svg" alt="SocioFi Cloud — managed hosting console (in build)" width="100%"/>
+      <p>Hosting for teams that don't want to run their own servers. One console to launch an app, watch its health, and step back to the previous version if a release goes wrong.</p>
+      <p><b>AI's role:</b> Deliberately small. AI writes a plain-language summary when something breaks and does nothing else. People make every change, and each one is kept in a record that cannot be edited.</p>
+    </td>
+  </tr>
+  <tr>
+    <td width="50%" valign="top">
+      <img src="https://raw.githubusercontent.com/mdKamrul-h/mdKamrul-h/main/assets/cards/torun.svg" alt="Torun — verified answers in Bangla (in build)" width="100%"/>
+      <p>A Bangla-first assistant for everyday questions about public services in Bangladesh, such as national ID services. Answers are free, show their sources, and carry a label saying how far they can be trusted.</p>
+      <p><b>AI's role:</b> It writes answers only from official sources that have been collected and checked. Any sentence it cannot tie to a source is removed, and when no source exists it says so instead of guessing. Editors review the sources and audit a sample of answers every month.</p>
+    </td>
+    <td width="50%" valign="top">
+      <img src="https://raw.githubusercontent.com/mdKamrul-h/mdKamrul-h/main/assets/cards/inzhora.svg" alt="Inzhora — AI-assisted permit plan check (in build)" width="100%"/>
+      <p>Before a home can be built in California, a plan checker reads the drawings and lists everything that breaks the building code. Inzhora reads the submitted drawings and prepares that list as a first draft, in a markup screen that works the way reviewers already do.</p>
+      <p><b>AI's role:</b> It drafts each comment with the code section it relies on and the spot on the drawing it refers to, and it is not allowed to invent a citation. A licensed reviewer accepts, edits or rejects every comment, and only accepted ones go into the letter to the applicant.</p>
+    </td>
+  </tr>
+  <tr>
+    <td width="50%" valign="top">
+      <a href="https://signal.antarious.com"><img src="https://raw.githubusercontent.com/mdKamrul-h/mdKamrul-h/main/assets/cards/antarious-signal.svg" alt="Antarious Signal — research to content, for brands (pilot live)" width="100%"/></a>
+      <p>Helps a brand decide what to say and when. It moves from market research to a strategy, then to a content calendar with drafts, and on to monitoring, in Bangla and English.</p>
+      <p><b>AI's role:</b> It researches the market with sources attached and drafts the content. It is barred from making up prices, statistics or testimonials. The owner approves the strategy and every draft, and nothing is ever posted automatically.</p>
+      <p><a href="https://signal.antarious.com">signal.antarious.com</a></p>
+    </td>
+    <td width="50%" valign="top">
+      <a href="https://parul.pet"><img src="https://raw.githubusercontent.com/mdKamrul-h/mdKamrul-h/main/assets/cards/parul.svg" alt="Parul — pet adoption and rescue community (open testing)" width="100%"/></a>
+      <p>A community app for pet owners, rescuers and vets: adoption, rescue alerts, lost-and-found, foster and transport help, blood donors, vet consults and messaging. In open testing on Google Play and on TestFlight for iPhone.</p>
+      <p><b>AI in this product:</b> None, on purpose. This is a product about people helping animals, and it did not need AI to do that well.</p>
+      <p><a href="https://parul.pet">parul.pet</a></p>
+    </td>
+  </tr>
+  <tr>
+    <td width="50%" valign="top">
+      <a href="https://jobglobal.sociofitechnology.com"><img src="https://raw.githubusercontent.com/mdKamrul-h/mdKamrul-h/main/assets/cards/global-job.svg" alt="Global Job — job portal for Bangladesh and abroad (live)" width="100%"/></a>
+      <p>A job site for work in Bangladesh and overseas. Instead of filling in filters, people describe the job they want in their own words and see, in plain language, why each opening suits them.</p>
+      <p><b>AI's role:</b> It reads and understands what the job seeker writes. The matching itself follows fixed rules, and the AI never ranks people against each other.</p>
+      <p><a href="https://jobglobal.sociofitechnology.com">jobglobal.sociofitechnology.com</a></p>
+    </td>
+    <td width="50%" valign="top">
+      <a href="https://chartis.sociofitechnology.com"><img src="https://raw.githubusercontent.com/mdKamrul-h/mdKamrul-h/main/assets/cards/chartis.svg" alt="Chartis HIS — hospital information system (early access)" width="100%"/></a>
+      <p>A Bangla-first system for clinics, diagnostic centres and hospitals. Front desk, consultation, billing, lab, pharmacy and wards run in one place, with an owner's dashboard on top.</p>
+      <p><b>AI's role:</b> It drafts the doctor's consultation note and marks it clearly as an unverified draft. The doctor reviews and signs every note, and the AI never makes a diagnosis.</p>
+      <p><a href="https://chartis.sociofitechnology.com">chartis.sociofitechnology.com</a></p>
+    </td>
+  </tr>
+</table>
 
 ## How I build
 
-```text
-model proposes → human approves → code commits     never let the LLM write prod data
-right-size the model                               Haiku/Flash for volume, Opus/Sonnet for reasoning
-deterministic core, generative shell               pricing, AQL verdicts, state machines live in code
-cap everything                                     steps, tokens, cost, time — agents get budgets
-tenant isolation below the agent                   RLS in Postgres, not trust in the prompt
-```
+| Principle | What it means in practice |
+| --- | --- |
+| **AI proposes, a person approves** | AI output is a draft in a queue. It never changes live data on its own. |
+| **Rules for anything that must be exact** | Prices, pass/fail results and calculations come from fixed logic, not from the AI. |
+| **Every agent gets a budget** | Hard limits on steps, cost and time, so nothing runs away. |
+| **Right-sized AI** | Small, cheap models for routine volume; the strongest ones only where real reasoning is needed. |
+| **Privacy enforced by the system** | Each customer's data is fenced off underneath the AI, not by trusting an instruction. |
 
 ## Currently going deeper
 
-- **MCP** — typed, safe model access to real systems; building servers for my own platforms next
-- **Small & local models** — pushing more of the tiering down to open-weight models
-- **Evals** — graduating from smoke-test verification to scored eval suites
-
-## Stack
-
-<p>
-  <img src="https://img.shields.io/badge/Claude_&_Anthropic_SDK-D97757?style=flat-square&logo=anthropic&logoColor=white">
-  <img src="https://img.shields.io/badge/Vercel_AI_SDK-000000?style=flat-square&logo=vercel&logoColor=white">
-  <img src="https://img.shields.io/badge/Python-3776AB?style=flat-square&logo=python&logoColor=white">
-  <img src="https://img.shields.io/badge/FastAPI-009688?style=flat-square&logo=fastapi&logoColor=white">
-  <img src="https://img.shields.io/badge/TypeScript-3178C6?style=flat-square&logo=typescript&logoColor=white">
-  <img src="https://img.shields.io/badge/Next.js-000000?style=flat-square&logo=nextdotjs&logoColor=white">
-  <img src="https://img.shields.io/badge/PostgreSQL_+_RLS-4169E1?style=flat-square&logo=postgresql&logoColor=white">
-  <img src="https://img.shields.io/badge/pgvector-336791?style=flat-square">
-  <img src="https://img.shields.io/badge/Supabase-3FCF8E?style=flat-square&logo=supabase&logoColor=white">
-  <img src="https://img.shields.io/badge/Celery_+_Redis-DC382D?style=flat-square&logo=redis&logoColor=white">
-  <img src="https://img.shields.io/badge/Docker-2496ED?style=flat-square&logo=docker&logoColor=white">
-  <img src="https://img.shields.io/badge/Flutter-02569B?style=flat-square&logo=flutter&logoColor=white">
-</p>
+- **Connecting AI to real systems safely** — giving models controlled, well-defined access to the tools a business already runs on
+- **Small and local models** — moving more routine work onto models that are cheaper and can run privately
+- **Measuring quality** — scored test suites for AI output, instead of spot checks
 
 ## GitHub
 
 <p align="center">
   <img height="165" src="https://github-readme-stats.vercel.app/api?username=mdKamrul-h&show_icons=true&hide_border=true&count_private=true&theme=tokyonight" alt="stats" />
-  <img height="165" src="https://github-readme-stats.vercel.app/api/top-langs/?username=mdKamrul-h&layout=compact&hide_border=true&theme=tokyonight&langs_count=8" alt="top langs" />
 </p>
 
 ---

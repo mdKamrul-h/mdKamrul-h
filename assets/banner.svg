@@ -67,17 +67,17 @@
 
     <g class="mono" font-size="12" fill="#c7d2fe" text-anchor="middle">
       <g fill="#111a30" stroke="#2a3760" stroke-width="1">
-        <rect x="72"  y="278" width="70"  height="26" rx="13"/>
-        <rect x="150" y="278" width="48"  height="26" rx="13"/>
-        <rect x="206" y="278" width="62"  height="26" rx="13"/>
-        <rect x="276" y="278" width="48"  height="26" rx="13"/>
-        <rect x="332" y="278" width="112" height="26" rx="13"/>
+        <rect x="72"  y="278" width="82"  height="26" rx="13"/>
+        <rect x="162" y="278" width="74"  height="26" rx="13"/>
+        <rect x="244" y="278" width="96"  height="26" rx="13"/>
+        <rect x="348" y="278" width="67"  height="26" rx="13"/>
+        <rect x="423" y="278" width="132" height="26" rx="13"/>
       </g>
-      <text x="107" y="295">agents</text>
-      <text x="174" y="295">rag</text>
-      <text x="237" y="295">evals</text>
-      <text x="300" y="295">mcp</text>
-      <text x="388" y="295">postgres rls</text>
+      <text x="113" y="295">garments</text>
+      <text x="199" y="295">permits</text>
+      <text x="292" y="295">healthcare</text>
+      <text x="381.5" y="295">hiring</text>
+      <text x="489" y="295">public services</text>
     </g>
 
     <!-- RIGHT: the approval loop -->
